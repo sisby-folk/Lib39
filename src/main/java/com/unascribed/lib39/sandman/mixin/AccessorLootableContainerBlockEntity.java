@@ -1,5 +1,7 @@
 package com.unascribed.lib39.sandman.mixin;
 
+import net.minecraft.loot.LootTable;
+import net.minecraft.registry.RegistryKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -10,6 +12,6 @@ import net.minecraft.util.Identifier;
 public interface AccessorLootableContainerBlockEntity {
 
 	@Accessor("lootTableId")
-	Identifier lib39Sandman$getLootTableId();
+	RegistryKey<LootTable> lib39Sandman$getLootTableId();
 	
 }

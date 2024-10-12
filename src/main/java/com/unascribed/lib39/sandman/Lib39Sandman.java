@@ -18,8 +18,7 @@ import net.minecraft.world.chunk.WorldChunk;
 public class Lib39Sandman implements ModInitializer {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public
-	static final Function<ThreadedChunkManager, Long2ObjectLinkedOpenHashMap<ChunkHolder>> chunkHolders =
+	public static final Function<ThreadedChunkManager, Long2ObjectLinkedOpenHashMap<ChunkHolder>> chunkHolders =
 			(Function)ReflectionHelper.of(MethodHandles.lookup(), ThreadedChunkManager.class)
 				.obtainGetter(Long2ObjectLinkedOpenHashMap.class, "chunkHolders", "field_17220");
 
@@ -32,8 +31,8 @@ public class Lib39Sandman implements ModInitializer {
 		return () -> chunkHolders.apply(world.getChunkManager().delegate)
 				.values().stream()
 				.filter(Objects::nonNull)
-				.filter(hc -> hc.getCurrentStatus() != null && hc.getCurrentStatus().isAtLeast(ChunkStatus.FULL))
-				.map(hc -> (WorldChunk)world.getChunk(hc.getPos().x, hc.getPos().z, ChunkStatus.FULL, false))
+				.filter(ChunkHolder::isAccessible)
+				.map(hc -> (WorldChunk)world.getChunk(hc.method_60473().x, hc.method_60473().z, ChunkStatus.FULL, false))
 				.filter(Objects::nonNull)
 				.iterator();
 	}

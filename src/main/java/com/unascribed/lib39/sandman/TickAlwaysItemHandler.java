@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.unascribed.lib39.core.Lib39Log;
 import com.unascribed.lib39.sandman.api.TicksAlwaysItem;
-import com.unascribed.lib39.sandman.mixin.AccessorHorseBaseEntity;
+import com.unascribed.lib39.sandman.mixin.AccessorAbstractHorseEntity;
 import com.unascribed.lib39.sandman.mixin.AccessorLootableContainerBlockEntity;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Sets;
@@ -16,7 +16,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.inventory.Inventory;
@@ -97,8 +97,8 @@ public class TickAlwaysItemHandler {
 					if (nbt.contains("LootTable")) continue;
 				}
 				Set<ItemStack> seen = Sets.newIdentityHashSet();
-				if (e instanceof HorseBaseEntity) {
-					SimpleInventory inv = ((AccessorHorseBaseEntity)e).lib39Sandman$getItems();
+				if (e instanceof AbstractHorseEntity) {
+					SimpleInventory inv = ((AccessorAbstractHorseEntity)e).lib39Sandman$getItems();
 					for (int i = 0; i < inv.size(); i++) {
 						ItemStack is = inv.getStack(i);
 						if (is.getItem() instanceof TicksAlwaysItem && seen.add(is)) {
@@ -112,7 +112,7 @@ public class TickAlwaysItemHandler {
 						ItemStack is = ((LivingEntity) e).getEquippedStack(slot);
 						if (is.getItem() instanceof TicksAlwaysItem && seen.add(is)) {
 							((TicksAlwaysItem)is.getItem()).entityInventoryTick(is, world, e, slot.getEntitySlotId(), false);
-							e.equipStack(slot, is);
+							((LivingEntity) e).equipStack(slot, is);
 						}
 					}
 				}
