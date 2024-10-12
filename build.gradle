@@ -29,15 +29,6 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-sourceSets {
-	dummy {
-		compileClasspath += sourceSets.main.compileClasspath
-	}
-	main {
-		compileClasspath += sourceSets.dummy.output
-	}
-}
-
 repositories {
 	maven {
 		url 'https://repo.unascribed.com'
@@ -285,71 +276,7 @@ def defineModule = { name, depModules ->
 evaluationDependsOnChildren()
 afterEvaluate {
 	defineModule 'core', []
-	defineModule 'lockpick', ['core']
-	defineModule 'tunnel', ['core']
-	defineModule 'phantom', ['core']
-	defineModule 'waypoint', ['core',
-		"fapi:fabric-transitive-access-wideners-v1:?",
-		"fapi:fabric-lifecycle-events-v1:?",
-		"fapi:fabric-rendering-v1:?",
-		"fapi:fabric-resource-loader-v0:?"
-	]
-	defineModule 'weld', ['core', "fapi:fabric-resource-loader-v0:?"]
 	defineModule 'sandman', ['core', "fapi:fabric-lifecycle-events-v1:?"]
-	defineModule 'crowbar', ['core', "fapi:fabric-api-base:?"]
-	defineModule 'keygen', ['core']
-	defineModule 'dessicant', ['core']
-	defineModule 'deferral', []
-	defineModule 'machination', ['core',
-		"fapi:fabric-lifecycle-events-v1:?",
-		"fapi:fabric-resource-loader-v0:?"
-	]
-	defineModule 'util', ['core']
-	defineModule 'ripple', ['core']
-	defineModule 'recoil', ['core', "fapi:fabric-api-base:?", "fapi:fabric-networking-api-v1:?"]
-	defineModule 'mesh', ['core', "fapi:fabric-lifecycle-events-v1:?"]
-	defineModule 'aqi', ['core']
-}
-
-if (System.getenv("MODRINTH_TOKEN")) {
-	modrinth {
-		token = System.getenv("MODRINTH_TOKEN")
-		projectId = 'lib39'
-		versionNumber = project.version
-		versionName = 'v'+project.version
-		versionType = 'release'
-		changelog = file('CHANGELOG.md').text
-		uploadFile = fatJar
-		gameVersions = ['1.20', '1.20.1']
-		loaders = ['fabric', 'quilt']
-		detectLoaders = false
-	}
-}
-
-if (System.getenv("CURSE_TOKEN")) {
-	curseforge {
-		apiKey = System.getenv("CURSE_TOKEN")
-		project {
-			id = '661690'
-			releaseType = 'release'
-			changelogType = 'markdown'
-			changelog = file('CHANGELOG.md')
-
-			addGameVersion '1.20'
-			addGameVersion '1.20.1'
-			addGameVersion 'Fabric'
-			addGameVersion 'Quilt'
-
-			mainArtifact(fatJar) {
-				displayName = 'v'+project.version
-			}
-		}
-		options {
-			javaIntegration = false
-			forgeGradleIntegration = false
-			javaVersionAutoDetect = false
-		}
-	}
 }
 
 publishing {
