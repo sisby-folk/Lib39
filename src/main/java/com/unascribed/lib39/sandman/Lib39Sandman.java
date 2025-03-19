@@ -1,7 +1,8 @@
 package com.unascribed.lib39.sandman;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import com.unascribed.lib39.core.api.util.ReflectionHelper;
@@ -12,7 +13,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedChunkManager;
-import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
 
 public class Lib39Sandman implements ModInitializer {
@@ -28,13 +28,20 @@ public class Lib39Sandman implements ModInitializer {
 	}
 
 	public static Iterable<WorldChunk> getLoadedChunks(ServerWorld world) {
-		return () -> chunkHolders.apply(world.getChunkManager().delegate)
-				.values().stream()
-				.filter(Objects::nonNull)
-				.filter(ChunkHolder::isAccessible)
-				.map(hc -> (WorldChunk)world.getChunk(hc.method_60473().x, hc.method_60473().z, ChunkStatus.FULL, false))
-				.filter(Objects::nonNull)
-				.iterator();
+        List<WorldChunk> list = new ArrayList<>();
+        Long2ObjectLinkedOpenHashMap<ChunkHolder> map = chunkHolders.apply(world.getChunkManager().delegate);
+
+        for (ChunkHolder holder : map.values()) {
+            if (holder != null) {
+                WorldChunk wc = holder.getWorldChunk();
+
+                if (wc != null) {
+                    list.add(wc);
+                }
+            }
+        }
+
+        return list;
 	}
 	
 }
